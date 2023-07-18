@@ -1,0 +1,13 @@
+---
+- name: Nomad | Download nomad pack "{{ nomad_pack_release }}"
+  ansible.builtin.unarchive:
+    src: "{{ nomad_pack_source }}"
+    dest: /usr/local/sbin
+    remote_src: true
+
+- name: Nomad | Install packs
+  loop: "{{ noamd_packs | dict2items }}"
+  ansible.builtin.include_tasks: nomad-pack/packs.yml
+  vars:
+    pack: "{{ item.value.name | default(item.key) }}"
+    release: "{{ item.value.release | default('latest') }}"

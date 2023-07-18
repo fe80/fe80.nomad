@@ -1,0 +1,5 @@
+---
+- name: "{{ path }} | Ensure directory exist"
+  ansible.builtin.command: "/bin/mkdir -p {{ path }}"
+  args:
+    creates: "{{ path }}"

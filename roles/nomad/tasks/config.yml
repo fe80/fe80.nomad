@@ -1,0 +1,19 @@
+---
+- name: Nomad | Ensure config directory exist
+  ansible.builtin.file:
+    state: directory
+    path: "{{ nomad_config_dir }}"
+    owner: "{{ nomad_user }}"
+    group: "{{ nomad_group }}"
+    mode: '0750'
+
+- name: Nomad | Copy configuration file nomad.hcl
+  ansible.builtin.template:
+    src: templates/nomad.hcl.j2
+    dest: "{{ nomad_config_dir }}/nomad.hcl"
+    owner: "{{ nomad_user }}"
+    group: "{{ nomad_group }}"
+    mode: '0440'
+  notify:
+    - Restart nomad
+...

@@ -1,0 +1,14 @@
+---
+- name: Nomad | Ensure systecl is configured to allow container traffic to the bridge
+  ansible.posix.sysctl:
+    name: "{{ item }}"
+    value: '1'
+    sysctl_set: true
+    state: present
+    reload: true
+  loop:
+    - net.bridge.bridge-nf-call-arptables
+    - net.bridge.bridge-nf-call-ip6tables
+    - net.bridge.bridge-nf-call-iptables
+  notify:
+    - Restart nomad

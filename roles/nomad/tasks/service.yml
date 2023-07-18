@@ -1,0 +1,6 @@
+---
+- name: Nomad | Ensure service is running
+  ansible.builtin.service:
+    name: nomad
+    state: started
+    enabled: true

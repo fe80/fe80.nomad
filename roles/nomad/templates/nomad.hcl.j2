@@ -1,0 +1,55 @@
+{% macro mapping_config(config, count=1, width=2) %}
+{% set next_count = count + 1 %}
+{% for key, value in config.items() %}
+{% if value is mapping %}
+{{ key | indent(count*width, first=True) }} {
+{{ mapping_config(value, count=next_count, width=width) -}}
+{{ '}' | indent(count*width, first=True) }}
+{% else %}
+{{ key | indent(count*width, first=True) }} = {% if value is string %}"{{ value }}"{% else %}{{ value | string | lower }}{% endif %}
+
+{% endif %}
+{% endfor %}
+{% endmacro %}
+# Full configuration options can be found at https://www.nomadproject.io/docs/configuration
+
+data_dir  = "{{ nomad_data_dir }}"
+bind_addr = "{{ nomad_bind }}"
+
+server {
+  # license_path is required for Nomad Enterprise as of Nomad v1.1.1+
+  #license_path = "/etc/nomad.d/license.hclic"
+  enabled          = {{ nomad_server | lower }}
+  bootstrap_expect = {{ nomad_bootstrap_expect }}
+}
+
+client {
+  enabled = {{ nomad_client | lower }}
+  servers = ["{{ nomad_servers | join('", "') }}"]
+{% for volume, params in nomad_host_volumes.items() %}
+{%- if 'path' in params %}
+  host_volume "{{ volume }}" {
+    path      = "{{ params['path'] }}"
+    read_only = {{ params['read_only'] | default('false') }}
+  }
+{% endif %}
+{% endfor %}
+}
+{% for key, value in nomad_plugins.items() %}
+
+plugin "{{ key }}" {
+{{ mapping_config(value) | replace('\'', '\"') -}}
+}
+{% endfor %}
+{% if 'enabled' in nomad_vault %}
+
+vault {
+{{ mapping_config({'ca_path': '/etc/ssl/certs'} | combine(nomad_vault)) | replace('\'', '\"') -}}
+}
+{% endif %}
+{% if nomad_tls.keys() | length > 0 %}
+
+tls {
+{{ mapping_config({'http': True, 'rpc': True} | combine(nomad_tls)) -}}
+}
+{% endif %}

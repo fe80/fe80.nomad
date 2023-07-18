@@ -1,0 +1,20 @@
+---
+- name: Nomad | Create host volume directories
+  loop: "{{ nomad_host_volumes | dict2items }}"
+  when: item.value.path is defined
+  ansible.builtin.include_tasks: install/volumes.yml
+  vars:
+    path: "{{ item.value.path }}"
+
+- name: Nomad | Require packages
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ nomad_require_packages }}"
+
+- name: Nomad | Install package
+  ansible.builtin.package:
+    name: "{{ nomad_package_name }}"
+    state: present
+  notify:
+    - Restart nomad

@@ -1,0 +1,5 @@
+---
+- name: Nomad | Instll pack "{{ pack }}"
+  ansible.builtin.command: "/usr/local/sbin/nomad-pack run {{ pack }} --ref={{ release }}"
+  environment:
+    NOMAD_ADDR: "http://{{ nomad_servers[0] }}:4646"

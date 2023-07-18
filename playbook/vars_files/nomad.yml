@@ -1,0 +1,16 @@
+---
+# Nomad pack
+nomad_pack: false
+
+# Host volume
+nomad_host_volumes:
+  acme:
+    path: /etc/acme
+
+# Plugins config
+nomad_plugins:
+  docker:
+    config:
+      allow_privileged: true
+      volumes:
+        enabled: true

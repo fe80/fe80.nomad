@@ -1,0 +1,11 @@
+---
+- name: Playbook for nomad installation
+  hosts: nomad-servers
+  become: true
+  become_user: root
+  vars_files:
+    - vars_files/nomad.yml
+
+  roles:
+    - role: geerlingguy.docker
+    - role: fe80.nomad.nomad

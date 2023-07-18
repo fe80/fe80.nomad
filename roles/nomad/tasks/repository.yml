@@ -1,0 +1,12 @@
+---
+- name: Nomad | Install Hashicorp gpg
+  ansible.builtin.apt_key:
+    url: "{{ nomad_apt_repository }}/gpg"
+    state: present
+    validate_certs: true
+
+- name: Nomad | Install Hashicorp repository
+  ansible.builtin.apt_repository:
+    update_cache: true
+    repo: >-
+      deb [arch={{ nomad_architecture }}] {{ nomad_apt_repository }} {{ ansible_distribution_release }} main

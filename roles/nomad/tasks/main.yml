@@ -1,0 +1,22 @@
+---
+- name: Nomad | Import repository tasks
+  ansible.builtin.import_tasks: repository.yml
+
+- name: Nomad | Import install tasks
+  ansible.builtin.import_tasks: install.yml
+
+- name: Nomad | Import config tasks
+  ansible.builtin.import_tasks: config.yml
+
+- name: Nomad | Import plugins tasks
+  ansible.builtin.import_tasks: plugins.yml
+
+- name: Nomad | Import syctl tasks
+  ansible.builtin.import_tasks: syctl.yml
+
+- name: Nomad | Import service tasks
+  ansible.builtin.import_tasks: service.yml
+
+- name: Nomad | Import nomad pack tasks
+  ansible.builtin.import_tasks: nomad-pack.yml
+  when: nomad_pack

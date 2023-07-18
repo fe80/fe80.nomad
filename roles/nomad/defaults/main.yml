@@ -1,0 +1,52 @@
+---
+# Default requirement
+nomad_require_packages:
+  - gpg
+  - coreutils
+
+# Some helpers
+nomad_architecture: amd64
+
+# Network plugin
+nomad_cni_release: v1.3.0
+nomad_cni_source: >-
+  https://github.com/containernetworking/plugins/releases/download
+nomad_cni_url: >-
+  {{ nomad_cni_source }}/{{ nomad_cni_release }}/cni-plugins-linux-{{ nomad_architecture }}-{{ nomad_cni_release }}.tgz
+nomad_cni_dir: /opt/cni
+
+# Storage Plugin
+nomad_csi_directory: /var/lib/csi
+
+nomad_plugins: {}
+
+# Package data
+nomad_apt_repository: 'https://apt.releases.hashicorp.com'
+nomad_package_name: nomad
+nomad_config_dir: /etc/nomad.d
+nomad_data_dir: /opt/nomad/data
+nomad_user: nomad
+nomad_group: "{{ nomad_user }}"
+
+# Configuration
+nomad_bind: 0.0.0.0
+nomad_client: true
+nomad_server: true
+nomad_bootstrap_expect: 1
+nomad_servers:
+  - 127.0.0.1
+noamd_host_volumes: {}
+
+# Nomad pack
+nomad_pack: false
+nomad_pack_release: nightly
+nomad_pack_source: >-
+  https://github.com/hashicorp/nomad-pack/releases/download/{{ nomad_pack_release }}/nomad-pack_0.0.1-techpreview.4_linux_amd64.zip
+noamd_packs: {}
+
+# Vault
+nomad_vault: {}
+
+# Tls
+nomad_tls: {}
+...

@@ -1,0 +1,40 @@
+---
+- name: Nomad | Create cni directories
+  ansible.builtin.file:
+    state: directory
+    path: "{{ nomad_cni_dir }}{{ item }}"
+    owner: root
+    group: root
+    mode: '0775'
+  loop:
+    - ''
+    - "/bin-{{ nomad_cni_release }}"
+
+- name: Nomad | Download cni release "{{ nomad_cni_release }}"
+  ansible.builtin.unarchive:
+    src: "{{ nomad_cni_url }}"
+    dest: "{{ nomad_cni_dir }}/bin-{{ nomad_cni_release }}"
+    remote_src: true
+
+
+- name: Nomad | Ensure cni use the correct release
+  ansible.builtin.file:
+    src: "{{ nomad_cni_dir }}/bin-{{ nomad_cni_release }}"
+    dest: "{{ nomad_cni_dir }}/bin"
+    state: link
+  notify:
+    - Restart nomad
+
+- name: Nomad | Cleanup old release
+  ansible.builtin.shell:
+    cmd: ls -1dt {{ nomad_cni_dir }}/bin-* | tail -n +3 | xargs rm -rf
+
+- name: Nomad | Create csi directory
+  ansible.builtin.file:
+    state: directory
+    path: "{{ nomad_csi_directory }}"
+    owner: "{{ nomad_user }}"
+    group: "{{ nomad_group }}"
+    mode: '0750'
+  notify:
+    - Restart nomad
