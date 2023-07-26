@@ -18,10 +18,10 @@
     owner: root
     group: root
     mode: '0440'
-  when: nomad_package_version == None
+  when: nomad_package_version != None
 
 - name: Nomad | Ensure package lock is not present
   ansible.builtin.file:
     path: /etc/apt/preferences.d/nomad
     state: absent
-  when: nomad_package_version != None
+  when: nomad_package_version == None
