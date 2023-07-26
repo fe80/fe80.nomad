@@ -23,6 +23,7 @@ nomad_plugins: {}
 # Package data
 nomad_apt_repository: 'https://apt.releases.hashicorp.com'
 nomad_package_name: nomad
+nomad_package_version: ~
 nomad_config_dir: /etc/nomad.d
 nomad_data_dir: /opt/nomad/data
 nomad_user: nomad

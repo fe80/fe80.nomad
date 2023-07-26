@@ -10,3 +10,18 @@
     update_cache: true
     repo: >-
       deb [arch={{ nomad_architecture }}] {{ nomad_apt_repository }} {{ ansible_distribution_release }} main
+
+- name: Nomad | Lock nomad version
+  ansible.builtin.template:
+    src: templates/nomad.pinning.j2
+    dest: /etc/apt/preferences.d/nomad
+    owner: root
+    group: root
+    mode: '0440'
+  when: nomad_package_version == None
+
+- name: Nomad | Ensure package lock is not present
+  ansible.builtin.file:
+    path: /etc/apt/preferences.d/nomad
+    state: absent
+  when: nomad_package_version != None
